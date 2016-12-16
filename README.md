@@ -40,14 +40,8 @@ In another bosh SSH session, start the proxy inside the container's network name
 ```bash
 export CONTAINER_ID=be979867-6f90-4cb6-74c0-86de31ad5865
 
-# use inspector-garden to enter garden's mount namespace
-/var/vcap/packages/guardian/bin/inspector-garden -pid $(pidof guardian) /bin/bash
-
 # discover the pid of a process in the container
 export NETNS_PID=$(cat /var/vcap/data/garden/depot/$CONTAINER_ID/pidfile)
-
-# confirm we can run processes in the container network namespace:
-netns-exec /proc/$NETNS_PID/ns/net ifconfig
 
 # start the proxy listening in the container netns
 netns-exec /proc/$NETNS_PID/ns/net mds-proxy /var/vcap/data/mds/mds-$CONTAINER_ID.sock
