@@ -1,17 +1,26 @@
 package main
 
 import (
+	"fmt"
 	"net"
 	"os"
 )
 
 func main() {
-	l, err := net.ListenUnix("unix", &net.UnixAddr{"/tmp/mds.sock", "unix"})
+
+	if len(os.Args) != 2 {
+		fmt.Println("mds-server <socket-path>")
+		os.Exit(1)
+	}
+
+	socket := os.Args[1]
+
+	l, err := net.ListenUnix("unix", &net.UnixAddr{socket, "unix"})
 	if err != nil {
 		panic(err)
 	}
 	defer l.Close()
-	defer os.Remove("/tmp/mds.sock")
+	defer os.Remove(socket)
 
 	for {
 		conn, err := l.AcceptUnix()
