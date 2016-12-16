@@ -30,8 +30,7 @@ func main() {
 
 		go func(conn net.Conn) {
 			defer conn.Close()
-			b := []byte(`hello`)
-			_, err = conn.Write(b)
+			_, err = conn.Write([]byte(`hello from mds\n`))
 			if err != nil {
 				panic(err)
 			}
